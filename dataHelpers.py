@@ -27,7 +27,7 @@ def add_todo(todo_input, todo_listbox):
 
     if len(todo.strip()) == 0:
         print("Todo Input field is empty")
-        messagebox.showerror("Please enter todo description")
+        messagebox.showerror("Error - missing text", "Please enter todo description")
 
     todo_listbox.insert(END, todo)
     # Cleart input field
@@ -45,17 +45,34 @@ def remove_todo(todo_listbox):
         todo_listbox.delete(todo_listbox.curselection())
     else:
         print("Please select todo from the list")
-        messagebox.showerror("Please select todo from the List")
+        messagebox.showerror("Error - no selection",
+                                        "Please select todo from the List")
 
 
-def mark_todo_finished(todo_list, finished_todo_list):
+def mark_todo_finished(todo_listbox, finished_todo_listbox):
     """
     Move the selected todo from unfinished to finished
     """
-    pass
+    if todo_listbox.curselection():
+        # Grab index of the selected todo. Move it to the finished todo listbox and remove from the first listbox
+        selected_index = todo_listbox.curselection()
+        todo = todo_listbox.get(selected_index[0])
+        finished_todo_listbox.insert(END, todo)
+        todo_listbox.delete(selected_index)
+    else:
+        messagebox.showinfo("No selection", 
+                                    "Please select an todo from the ToDo activities")
+
 
 def unmark_todo_finished(todo_list, finished_todo_list):
     """
-    Move the selected todo from finished back to unfinished
+    Move the selected todo from finished todo listbox back to unfinished todo listbox
     """
-    pass
+    if finished_todo_list.curselection():
+        selected_index = finished_todo_list.curselection()
+        todo = finished_todo_list.get(selected_index[0])
+        todo_list.insert(END, todo)
+        finished_todo_list.delete(selected_index)
+    else:
+        messagebox.showinfo("No selection", 
+                                    "Please select an todo from the Finished ToDos")
