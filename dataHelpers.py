@@ -66,22 +66,50 @@ def add_todo(todo_input, todo_listbox):
 
 def remove_todo(todo_listbox, finished_todo_listbox):
     """
-    Method removes selected todo entry from either of both listbox
+    Method removes selected todo entry from either of both listboxes 
+    and corresponding row from the database
     """
-    if todo_listbox.curselection():
-        # Remove todo from todo_listbox
-        print(todo_listbox.get(todo_listbox.curselection()[0]))
-        todo_listbox.delete(todo_listbox.curselection())
-    elif finished_todo_listbox.curselection():
-        # Remove todo from finished_todo_listbox
-        print(finished_todo_listbox.get(finished_todo_listbox.curselection()[0]))
-        finished_todo_listbox.delete(finished_todo_listbox.curselection())
-    else:
-        # Display error
-        print("Please select todo from the list")
-        messagebox.showerror("Error - no selection",
-                                        "Please select todo from the List")
+    if delete_selected_todo(todo_listbox) or delete_selected_todo(finished_todo_listbox):
+        # Delete successful - stop execution
+        return
 
+    # Display error
+    print("Please select todo from the list")
+    messagebox.showerror("Error - no selection",
+                                    "Please select todo from the List")
+
+
+def delete_selected_todo(listbox):
+    """
+    Helper that removes selected todo from any of listboxes and its
+    matching row in the database. Returns True if todo was selected and successfully removed, 
+    False if nothing was selected in this listbox.
+    """
+    if not listbox.curselection():
+        return False
+
+    print("Removing todo...")
+    selected_index = listbox.curselection()
+    todo = listbox.get(selected_index[0])
+
+    # Remove from the database
+    try:
+        with getConnection() as conn:
+            with conn.cursor() as cursor:
+                deleteQuery = 'DELETE FROM todos WHERE body = %s LIMIT 1'
+
+                cursor.execute(deleteQuery, (todo,))
+                conn.commit()
+                print("Delete Successful")
+
+                # Remove todo from the UI
+                listbox.delete(selected_index)
+    except mysql.connector.Error as e:
+        print(f"Error deleting: {e}")
+        messagebox.showerror("Database Error", "Error deleting from the database")
+
+    return True
+    
 
 def mark_todo_finished(todo_listbox, finished_todo_listbox):
     """
