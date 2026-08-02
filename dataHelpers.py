@@ -38,16 +38,30 @@ def add_todo(todo_input, todo_listbox):
     """
     Method used to generate a new todo entry.
     Grabs user input from todoInput field and pushes into the todoListbox element
+    and stores it in the database
     """
     todo = todo_input.get("1.0", END)
 
     if len(todo.strip()) == 0:
         print("Todo Input field is empty")
         messagebox.showerror("Error - missing text", "Please enter todo description")
+    else:
+        # Add the new entry to the database
+        try:
+            with getConnection() as conn:
+                with conn.cursor() as cursor:
+                    insertQuery = 'INSERT INTO todos (body, status) VALUES (%s, %s)'
+                    # New todos always start out unfinished
+                    cursor.execute(insertQuery, (todo, 'unfinished'))
+                    conn.commit()
+                    print("Insert was successful")
+        except mysql.connector.Error as e:
+            print(f"Error inserting into the database, : {e}")
+            messagebox.showerror("Database Error", "Error inserting into the database")
 
-    todo_listbox.insert(END, todo)
-    # Cleart input field
-    todo_input.delete("1.0", END)
+        # Update UI and clear input field
+        todo_listbox.insert(END, todo)
+        todo_input.delete("1.0", END)
 
 
 def remove_todo(todo_listbox, finished_todo_listbox):
