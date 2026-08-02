@@ -1,4 +1,5 @@
-from tkinter import END
+from tkinter import END, messagebox
+
 
 unfinished_todos = []
 finished_todos = []
@@ -15,6 +16,37 @@ def load_todos(todo_listbox, finished_todo_listbox):
             todo_listbox.insert(END, todo)
         else:
             finished_todo_listbox.insert(END, todo)
+
+
+def add_todo(todo_input, todo_listbox):
+    """
+    Method used to generate a new todo entry.
+    Grabs user input from todoInput field and pushes into the todoListbox element
+    """
+    todo = todo_input.get("1.0", END)
+
+    if len(todo.strip()) == 0:
+        print("Todo Input field is empty")
+        messagebox.showerror("Please enter todo description")
+
+    todo_listbox.insert(END, todo)
+    # Cleart input field
+    todo_input.delete("1.0", END)
+
+
+def remove_todo(todo_listbox):
+    """
+    Method removes selected todo entry
+    """
+    if todo_listbox.curselection():
+        # Return index
+        selected_todo = todo_listbox.get(todo_listbox.curselection()[0])
+        print(selected_todo)
+        todo_listbox.delete(todo_listbox.curselection())
+    else:
+        print("Please select todo from the list")
+        messagebox.showerror("Please select todo from the List")
+
 
 def mark_todo_finished(todo_list, finished_todo_list):
     """

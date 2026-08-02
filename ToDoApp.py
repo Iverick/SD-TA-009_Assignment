@@ -22,8 +22,8 @@ lblHeading.grid(row=0, column=0, columnspan=3, pady=10)
 lblTodoItems = Label(text="Add Todo", font=fntLabel, bg=myBgColour, fg=myFgColour)
 lblTodoItems.grid(column=0, row=1, pady=10)
 
-todoEntry = Text(height=1, width=20, fg=myFgColour)
-todoEntry.grid(column=0, row=2, padx=10)
+todoInput = Text(height=1, width=20, fg=myFgColour)
+todoInput.grid(column=0, row=2, padx=10)
 
 # TODO: user input handler
 # todoEntry.bind("<KeyPress>", txtUserInput_KeyPressed)
@@ -67,13 +67,14 @@ buttonWidth = 20
 buttonPadx = 20
 
 # Setup Add Todo button
-btnAddTodo = Button(buttonFrame, text="Add Todo", command=add_clicked, fg=myFgColour)
+btnAddTodo = Button(buttonFrame, text="Add Todo", fg=myFgColour)
+btnAddTodo.config(command=lambda: add_clicked(todoInput, todoListbox))
 btnAddTodo.config(height=buttonHeight, width=buttonWidth)
 btnAddTodo.pack(side='left', padx=buttonPadx)
 
 # Setup Remove Todo button
 btnRemoveTodo = Button(buttonFrame, text="Remove Todo", fg=myFgColour)
-btnRemoveTodo.config(command=remove_clicked)
+btnRemoveTodo.config(command=lambda: remove_clicked(todoListbox))
 btnRemoveTodo.config(height=buttonHeight, width=buttonWidth)
 btnRemoveTodo.pack(side='left', padx=buttonPadx)
 
