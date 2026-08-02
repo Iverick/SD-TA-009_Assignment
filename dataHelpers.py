@@ -1,21 +1,37 @@
 from tkinter import END, messagebox
+import mysql.connector
 
+from db_setup import DEFAULT_TODOS, DB_CONFIG
 
-unfinished_todos = []
-finished_todos = []
+def getConnection():
+    """
+    Helper function called by the functions used to access the database
+    """
+    return mysql.connector.connect(**DB_CONFIG)
 
-DEFAULT_TODOS = ["Buy groceries", "Walk the dog", "Read a book"]
 
 def load_todos(todo_listbox, finished_todo_listbox):
     """
-    Method loads list of todos on page load and pushes them into 
-    todo_listbox and finished_todo_listbox UI boxes based on their status
+    Method loads list of todos from the database on page load
+    Pushes them into todo_listbox and finished_todo_listbox UI boxes based on their status
     """
-    for index, todo in enumerate(DEFAULT_TODOS):
-        if index % 2 == 0:
-            todo_listbox.insert(END, todo)
-        else:
-            finished_todo_listbox.insert(END, todo)
+    try:
+        with getConnection() as conn:
+            with conn.cursor() as cursor:
+
+                query = "SELECT body, status FROM todos"
+                cursor.execute(query)
+                rows = cursor.fetchall()
+
+                for body, status in rows:
+                    # Insert each todo entry into listboxes
+                    if status == "unfinished":
+                        todo_listbox.insert(END, body)
+                    else:
+                        finished_todo_listbox.insert(END, body)
+    except mysql.connector.Error as e:
+        print(f"Error connecting: {e}")
+        messagebox.showerror("Database Error", "Error selecting todos from the database")
 
 
 def add_todo(todo_input, todo_listbox):
