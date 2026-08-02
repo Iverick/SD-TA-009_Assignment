@@ -74,20 +74,20 @@ btnAddTodo.pack(side='left', padx=buttonPadx)
 
 # Setup Remove Todo button
 btnRemoveTodo = Button(buttonFrame, text="Remove Todo", fg=myFgColour)
-btnRemoveTodo.config(command=lambda: remove_clicked(todoListbox))
+btnRemoveTodo.config(command=lambda: remove_clicked(todoListbox, finishedListbox))
 btnRemoveTodo.config(height=buttonHeight, width=buttonWidth)
 btnRemoveTodo.pack(side='left', padx=buttonPadx)
 
 # Setup mark todo as finished button
-btnMarkFinished = Button(buttonFrame, text="Todo Finished",
-                         command=lambda: mark_as_finished_clicked(todoListbox, finishedListbox))
-btnMarkFinished.config(height=buttonHeight, width=buttonWidth, fg=myFgColour)
+btnMarkFinished = Button(buttonFrame, text="Todo Finished", fg=myFgColour)
+btnMarkFinished.config(command=lambda: mark_as_finished_clicked(todoListbox, finishedListbox))
+btnMarkFinished.config(height=buttonHeight, width=buttonWidth)
 btnMarkFinished.pack(side='left', padx=buttonPadx)
 
 # Setup unmark todo as finished button
-btnUnmarkFinished = Button(buttonFrame, text="Unmark Finished Todo",
-                           command=lambda: unmark_as_finished_clicked(todoListbox, finishedListbox))
-btnUnmarkFinished.config(height=buttonHeight, width=buttonWidth, fg=myFgColour)
+btnUnmarkFinished = Button(buttonFrame, text="Unmark Finished Todo", fg=myFgColour)
+btnUnmarkFinished.config(command=lambda: unmark_as_finished_clicked(todoListbox, finishedListbox))
+btnUnmarkFinished.config(height=buttonHeight, width=buttonWidth)
 btnUnmarkFinished.pack(side='left', padx=buttonPadx)
 
 # Load default todos into the arrays and display them

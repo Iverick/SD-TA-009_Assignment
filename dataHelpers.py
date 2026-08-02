@@ -34,16 +34,20 @@ def add_todo(todo_input, todo_listbox):
     todo_input.delete("1.0", END)
 
 
-def remove_todo(todo_listbox):
+def remove_todo(todo_listbox, finished_todo_listbox):
     """
-    Method removes selected todo entry
+    Method removes selected todo entry from either of both listbox
     """
     if todo_listbox.curselection():
-        # Return index
-        selected_todo = todo_listbox.get(todo_listbox.curselection()[0])
-        print(selected_todo)
+        # Remove todo from todo_listbox
+        print(todo_listbox.get(todo_listbox.curselection()[0]))
         todo_listbox.delete(todo_listbox.curselection())
+    elif finished_todo_listbox.curselection():
+        # Remove todo from finished_todo_listbox
+        print(finished_todo_listbox.get(finished_todo_listbox.curselection()[0]))
+        finished_todo_listbox.delete(finished_todo_listbox.curselection())
     else:
+        # Display error
         print("Please select todo from the list")
         messagebox.showerror("Error - no selection",
                                         "Please select todo from the List")
