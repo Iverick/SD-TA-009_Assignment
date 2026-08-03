@@ -113,28 +113,51 @@ def delete_selected_todo(listbox):
 
 def mark_todo_finished(todo_listbox, finished_todo_listbox):
     """
-    Move the selected todo from unfinished to finished
+    Move calls update_todo_status helper to change todo status to finished.
+    Displays error if the operation was not successful
     """
-    if todo_listbox.curselection():
-        # Grab index of the selected todo. Move it to the finished todo listbox and remove from the first listbox
-        selected_index = todo_listbox.curselection()
-        todo = todo_listbox.get(selected_index[0])
-        finished_todo_listbox.insert(END, todo)
-        todo_listbox.delete(selected_index)
-    else:
+    if not update_todo_status(todo_listbox, finished_todo_listbox, 'finished'):
         messagebox.showinfo("No selection", 
                                     "Please select an todo from the ToDo activities")
 
 
-def unmark_todo_finished(todo_list, finished_todo_list):
+def unmark_todo_finished(todo_listbox, finished_todo_listbox):
     """
-    Move the selected todo from finished todo listbox back to unfinished todo listbox
+    Move calls update_todo_status helper to change todo status to unfinished.
+    Displays error if the operation was not successful
     """
-    if finished_todo_list.curselection():
-        selected_index = finished_todo_list.curselection()
-        todo = finished_todo_list.get(selected_index[0])
-        todo_list.insert(END, todo)
-        finished_todo_list.delete(selected_index)
-    else:
-        messagebox.showinfo("No selection", 
+    if not update_todo_status(finished_todo_listbox, todo_listbox, 'unfinished'):
+        messagebox.showinfo("No selection",
                                     "Please select an todo from the Finished ToDos")
+
+
+def update_todo_status(source_listbox, target_listbox, new_status):
+    """
+    Helper that moves the selected item from source_listbox to target_listbox,
+    and updates the todo entry status in the database.
+    Returns True if anything was selected and updated, False otherwise.
+    """
+    if not source_listbox.curselection():
+        return False
+    
+    selected_index = source_listbox.curselection()
+    todo = source_listbox.get(selected_index[0])
+
+    # Update status in the database
+    try:
+        with getConnection() as conn:
+            with conn.cursor() as cursor:
+                update_query = 'UPDATE todos SET status = %s WHERE body = %s LIMIT 1'
+
+                cursor.execute(update_query, (new_status, todo))
+                conn.commit()
+                print("Update Successful")
+
+                # Move the todo between listboxes
+                target_listbox.insert(END, todo)
+                source_listbox.delete(selected_index)
+    except mysql.connector.Error as e:
+        print(f"Error updating: {e}")
+        messagebox.showerror("Database Error", "Error updating the database")
+
+    return True
