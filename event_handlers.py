@@ -1,4 +1,4 @@
-from dataHelpers import mark_todo_finished, unmark_todo_finished, add_todo, remove_todo
+from data_helpers import mark_todo_finished, unmark_todo_finished, add_todo, remove_todo
 
 def add_clicked(todo_entry, todo_listbox):
     add_todo(todo_entry, todo_listbox)
