@@ -55,12 +55,14 @@ def add_todo(todo_input, todo_listbox):
                     cursor.execute(insertQuery, (todo, 'unfinished'))
                     conn.commit()
                     print("Insert was successful")
+
+                    # Update UI
+                    todo_listbox.insert(END, todo)
         except mysql.connector.Error as e:
             print(f"Error inserting into the database, : {e}")
             messagebox.showerror("Database Error", "Error inserting into the database")
 
-        # Update UI and clear input field
-        todo_listbox.insert(END, todo)
+        # clear input field
         todo_input.delete("1.0", END)
 
 

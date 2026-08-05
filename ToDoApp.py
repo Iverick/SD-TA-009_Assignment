@@ -45,7 +45,7 @@ def run_app():
     todoListFrame.grid(column=1, row=2, rowspan=4)
 
     # Setup a listbox with label and scrollbar to display added todo activities
-    lblTodoList = Label(text="Todo Activities", font=fntLabel, bg=myBgColour, fg=myFgColour)
+    lblTodoList = Label(text="Todo Tasks", font=fntLabel, bg=myBgColour, fg=myFgColour)
     lblTodoList.grid(row=1, column=1)
 
     todoListbox = Listbox(todoListFrame, height=10, width=25, font=fntListbox, fg=myFgColour)
@@ -59,7 +59,7 @@ def run_app():
     todoScrollBar.config(command=todoListbox.yview)
 
     # Setup a listbox with label and scrollbar to display finished todo activities
-    lblFinishedbox = Label(text="Finished ToDos", font=fntLabel, bg=myBgColour, fg=myFgColour)
+    lblFinishedbox = Label(text="Finished Tasks", font=fntLabel, bg=myBgColour, fg=myFgColour)
     lblFinishedbox.grid(row=1, column=3)
 
     finishedListFrame = Frame(window)
@@ -98,13 +98,13 @@ def run_app():
     btnRemoveTodo.pack(side='left', padx=buttonPadx)
 
     # Setup mark todo as finished button
-    btnMarkFinished = Button(buttonFrame, text="Todo Finished", font=fntButton, cursor="hand2")
+    btnMarkFinished = Button(buttonFrame, text="Task Finished", font=fntButton, cursor="hand2")
     btnMarkFinished.config(command=lambda: mark_as_finished_clicked(todoListbox, finishedListbox))
     btnMarkFinished.config(height=buttonHeight, width=buttonWidth, bg=colorToggle, fg=colorButtonFg, relief=FLAT)
     btnMarkFinished.pack(side='left', padx=buttonPadx)
 
     # Setup unmark todo as finished button
-    btnUnmarkFinished = Button(buttonFrame, text="Unmark Finished Todo", font=fntButton, cursor="hand2")
+    btnUnmarkFinished = Button(buttonFrame, text="Unmark Finished Task", font=fntButton, cursor="hand2")
     btnUnmarkFinished.config(command=lambda: unmark_as_finished_clicked(todoListbox, finishedListbox))
     btnUnmarkFinished.config(height=buttonHeight, width=buttonWidth, bg=colorToggle, fg=colorButtonFg, relief=FLAT)
     btnUnmarkFinished.pack(side='left', padx=buttonPadx)
