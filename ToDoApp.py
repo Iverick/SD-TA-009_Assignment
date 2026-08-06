@@ -13,6 +13,32 @@ def run_app():
     colorButtonFg = "white"
 
     placeholderColour = "#3A3A3A"
+
+    def handle_todo_input_enter(event):
+        '''
+        Helper function that invokes btnAddTodo event handling process
+        if user hits "enter" button with todoInput field focused
+        '''
+        if event.keysym == "Return":
+            btnAddTodo.invoke()
+            return "break"
+
+    def make_listbox_key_handler(move_button):
+        '''
+        Helper function that return key handler for listboxes
+        Enter moves the selected todo between listboxes.
+        Space deletes it.
+
+        Accept UI element (btnMarkFinished, btnMarkUnfinished) as move_button argument
+        '''
+        def handler(event):
+            if event.keysym == "Return":
+                move_button.invoke()
+                return "break"
+            elif event.keysym == "space":
+                btnRemoveTodo.invoke()
+                return "break"
+        return handler
             
     # Create a window
     window = Tk()
@@ -35,9 +61,6 @@ def run_app():
 
     todoInput = Text(height=1, width=25, font=fntListbox, fg=placeholderColour)
     todoInput.grid(column=0, row=2, padx=10, sticky="w")
-
-    # TODO: user input handler
-    # todoEntry.bind("<KeyPress>", txtUserInput_KeyPressed)
 
     ##########################################################################################
     # Setup a following frame that display lists of added and finished Todo
@@ -108,6 +131,11 @@ def run_app():
     btnUnmarkFinished.config(command=lambda: unmark_as_finished_clicked(todoListbox, finishedListbox))
     btnUnmarkFinished.config(height=buttonHeight, width=buttonWidth, bg=colorToggle, fg=colorButtonFg, relief=FLAT)
     btnUnmarkFinished.pack(side='left', padx=buttonPadx)
+    
+    # Binding key press handlers to UI elements
+    todoInput.bind("<KeyPress>", handle_todo_input_enter)
+    todoListbox.bind("<KeyPress>", make_listbox_key_handler(btnMarkFinished))
+    finishedListbox.bind("<KeyPress>", make_listbox_key_handler(btnUnmarkFinished))
 
     # Load default todos into the arrays and display them
     load_todos(todoListbox, finishedListbox)
